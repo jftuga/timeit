@@ -17,6 +17,6 @@ c:\>timeit.exe sleep 2
 ```
 
 ```
-pi@pi:~ $ timeit linux.iso
+pi@pi:~ $ timeit md5sum linux.iso
 4.1329682s
 ```
