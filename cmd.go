@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-const version = "1.0"
+const version = "1.0.1"
 
 func main() {
 	if len(os.Args) == 1 {
@@ -26,7 +26,7 @@ func main() {
 		os.Exit(1)
 	}
 	timeStart := time.Now()
-	out, err := exec.Command(os.Args[1], os.Args[2:len(os.Args)]...).Output()
+	out, err := exec.Command(os.Args[1], os.Args[2:len(os.Args)]...).CombinedOutput()
 	elapsed := time.Since(timeStart)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Command finished with error: %v\n", err)
