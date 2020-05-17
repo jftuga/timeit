@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!-- Do not remove this test for UTF-8: if “Ω” doesn’t appear as greek uppercase omega letter enclosed in quotation marks, you should use an editor that supports UTF-8, not this one. -->
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>timeit</id>
+    <version>1.2.1.20200517</version>
+    <title>timeit</title>
+    <authors>John Taylor</authors>
+    <owners>John Taylor</owners>
+    <licenseUrl>https://github.com/jftuga/timeit/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/jftuga/timeit</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description><![CDATA[
+timeit is a CLI tool used to time the duration of the given cmd
+
+Usage: timeit [cmd] [args...]
+You may need to surround args in double-quotes
+
+Example:
+c:\>timeit.exe sleep 2
+2.04042s
+  ]]></description>
+    <summary>timeit is a CLI tool used to time the duration of the given command</summary>
+    <tags>timer</tags>
+    <releaseNotes>https://github.com/jftuga/timeit/releases/tag/v1.2.1</releaseNotes>
+    <docsUrl>https://github.com/jftuga/timeit/blob/master/README.md</docsUrl>
+    <projectSourceUrl>https://github.com/jftuga/timeit</projectSourceUrl>
+    <packageSourceUrl>https://github.com/jftuga/timeit/chocolatey</packageSourceUrl>
+    <dependencies>
+      <dependency id="chocolatey" version="0.10.15" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>
