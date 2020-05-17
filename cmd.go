@@ -14,11 +14,14 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"os/signal"
 	"sync"
 	"time"
 )
 
-const version = "1.1.0"
+const version = "1.2.0"
+
+var timeStart time.Time
 
 func checkBuf(buf *bufio.Reader, wg *sync.WaitGroup) {
 	for {
@@ -60,6 +63,19 @@ func setup(cmd *exec.Cmd) (*bufio.Reader, *bufio.Reader) {
 	return outBuf, errBuf
 }
 
+func ctrlCHandler() {
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	go func() {
+		for sig := range c {
+			elapsed := time.Since(timeStart)
+			fmt.Fprintln(os.Stderr, sig)
+			fmt.Fprintln(os.Stderr, elapsed)
+			os.Exit(1)
+		}
+	}()
+}
+
 func main() {
 	if len(os.Args) == 1 {
 		fmt.Fprintf(os.Stderr, "\ntimeit v%s\n", version)
@@ -70,7 +86,8 @@ func main() {
 
 	cmd := exec.Command(os.Args[1], os.Args[2:len(os.Args)]...)
 	outBuf, errBuf := setup(cmd)
-	timeStart := time.Now()
+	ctrlCHandler()
+	timeStart = time.Now()
 	run(cmd, outBuf, errBuf)
 	elapsed := time.Since(timeStart)
 	fmt.Fprintln(os.Stderr, elapsed)
