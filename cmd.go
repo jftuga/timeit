@@ -19,7 +19,7 @@ import (
 	"time"
 )
 
-const version = "1.2.0"
+const version = "1.2.1"
 
 var timeStart time.Time
 
@@ -76,11 +76,17 @@ func ctrlCHandler() {
 	}()
 }
 
+func usage() {
+	fmt.Fprintf(os.Stderr, "\ntimeit v%s\n", version)
+	fmt.Fprintf(os.Stderr, "https://github.com/jftuga/timeit\n")
+	fmt.Fprintf(os.Stderr, "A CLI tool used to time the duration of the given cmd\n\n")
+	fmt.Fprintf(os.Stderr, "Usage: %s [cmd] [args...]\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "You may need to surround args within double-quotes\n")
+}
+
 func main() {
 	if len(os.Args) == 1 {
-		fmt.Fprintf(os.Stderr, "\ntimeit v%s\n", version)
-		fmt.Fprintf(os.Stderr, "\nUsage: %s [cmd] [args...]\n", os.Args[0])
-		fmt.Fprintf(os.Stderr, "You may need to surround arguments in double-quotes\n")
+		usage()
 		os.Exit(1)
 	}
 
