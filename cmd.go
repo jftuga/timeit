@@ -10,13 +10,55 @@ The result is sent to STDERR
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"os/exec"
+	"sync"
 	"time"
 )
 
-const version = "1.0.1"
+const version = "1.1.0"
+
+func checkBuf(buf *bufio.Reader, wg *sync.WaitGroup) {
+	for {
+		line, err := buf.ReadString('\n')
+		if err != nil {
+			if "EOF" != err.Error() {
+				fmt.Fprintf(os.Stderr, "%s\n", err)
+			}
+			break
+		}
+		fmt.Printf("%s", line)
+	}
+	wg.Done()
+}
+
+func run(cmd *exec.Cmd, outBuf, errBuf *bufio.Reader) {
+	cmd.Start()
+
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go checkBuf(outBuf, &wg)
+	go checkBuf(errBuf, &wg)
+	wg.Wait()
+
+}
+
+func setup(cmd *exec.Cmd) (*bufio.Reader, *bufio.Reader) {
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", err)
+	}
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", err)
+	}
+
+	outBuf := bufio.NewReader(stdout)
+	errBuf := bufio.NewReader(stderr)
+	return outBuf, errBuf
+}
 
 func main() {
 	if len(os.Args) == 1 {
@@ -25,12 +67,11 @@ func main() {
 		fmt.Fprintf(os.Stderr, "You may need to surround arguments in double-quotes\n")
 		os.Exit(1)
 	}
+
+	cmd := exec.Command(os.Args[1], os.Args[2:len(os.Args)]...)
+	outBuf, errBuf := setup(cmd)
 	timeStart := time.Now()
-	out, err := exec.Command(os.Args[1], os.Args[2:len(os.Args)]...).CombinedOutput()
+	run(cmd, outBuf, errBuf)
 	elapsed := time.Since(timeStart)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Command finished with error: %v\n", err)
-	}
-	fmt.Printf("%s", out)
 	fmt.Fprintln(os.Stderr, elapsed)
 }
