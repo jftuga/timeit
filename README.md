@@ -4,10 +4,8 @@ A CLI tool used to time the duration of the given command
 ## Usage
 
 ```
-timeit v1.1.0
-
 Usage: timeit [cmd] [args...]
-You may need to surround arguments in double-quotes
+You may need to surround args within double-quotes
 ```
 
 ## Examples
