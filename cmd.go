@@ -15,11 +15,12 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
+	"path/filepath"
 	"sync"
 	"time"
 )
 
-const version = "1.2.1"
+const version = "1.2.2"
 
 var timeStart time.Time
 
@@ -38,6 +39,7 @@ func checkBuf(buf *bufio.Reader, wg *sync.WaitGroup) {
 }
 
 func run(cmd *exec.Cmd, outBuf, errBuf *bufio.Reader) {
+	timeStart = time.Now()
 	cmd.Start()
 
 	var wg sync.WaitGroup
@@ -48,7 +50,7 @@ func run(cmd *exec.Cmd, outBuf, errBuf *bufio.Reader) {
 
 }
 
-func setup(cmd *exec.Cmd) (*bufio.Reader, *bufio.Reader) {
+func ioSetup(cmd *exec.Cmd) (*bufio.Reader, *bufio.Reader) {
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
@@ -80,7 +82,7 @@ func usage() {
 	fmt.Fprintf(os.Stderr, "\ntimeit v%s\n", version)
 	fmt.Fprintf(os.Stderr, "https://github.com/jftuga/timeit\n")
 	fmt.Fprintf(os.Stderr, "A CLI tool used to time the duration of the given cmd\n\n")
-	fmt.Fprintf(os.Stderr, "Usage: %s [cmd] [args...]\n", os.Args[0])
+	fmt.Fprintf(os.Stderr, "Usage: %s [cmd] [args...]\n", filepath.Base(os.Args[0]))
 	fmt.Fprintf(os.Stderr, "You may need to surround args within double-quotes\n")
 }
 
@@ -91,9 +93,8 @@ func main() {
 	}
 
 	cmd := exec.Command(os.Args[1], os.Args[2:len(os.Args)]...)
-	outBuf, errBuf := setup(cmd)
+	outBuf, errBuf := ioSetup(cmd)
 	ctrlCHandler()
-	timeStart = time.Now()
 	run(cmd, outBuf, errBuf)
 	elapsed := time.Since(timeStart)
 	fmt.Fprintln(os.Stderr, elapsed)
