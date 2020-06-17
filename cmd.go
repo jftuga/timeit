@@ -20,7 +20,7 @@ import (
 	"time"
 )
 
-const version = "1.2.2"
+const version = "1.2.3"
 
 var timeStart time.Time
 
@@ -81,15 +81,21 @@ func ctrlCHandler() {
 func usage() {
 	fmt.Fprintf(os.Stderr, "\ntimeit v%s\n", version)
 	fmt.Fprintf(os.Stderr, "https://github.com/jftuga/timeit\n")
-	fmt.Fprintf(os.Stderr, "A CLI tool used to time the duration of the given cmd\n\n")
+	fmt.Fprintf(os.Stderr, "A cross-platform CLI tool used to time the duration of the given cmd\n\n")
 	fmt.Fprintf(os.Stderr, "Usage: %s [cmd] [args...]\n", filepath.Base(os.Args[0]))
-	fmt.Fprintf(os.Stderr, "You may need to surround args within double-quotes\n")
+	fmt.Fprintf(os.Stderr, "You may need to surround args within double-quotes\n\n")
+	fmt.Fprintf(os.Stderr, "Examples:\n")
+	fmt.Fprintf(os.Stderr, "    timeit wget https://example.com/file.tar.gz\n")
+	fmt.Fprintf(os.Stderr, "    timeit gzip -t \"file with spaces.gz\"\n\n")
+	fmt.Fprintf(os.Stderr, "For built-in Windows 'cmd' commands:\n")
+	fmt.Fprintf(os.Stderr, "    timeit cmd /c \"dir c:\\ /s/b > list.txt\"\n")
+	fmt.Fprintf(os.Stderr, "    timeit cmd /c dir /s \"c:\\Program Files\"\n\n")
 }
 
 func main() {
 	if len(os.Args) == 1 {
 		usage()
-		os.Exit(1)
+		os.Exit(0)
 	}
 
 	cmd := exec.Command(os.Args[1], os.Args[2:len(os.Args)]...)
