@@ -25,7 +25,7 @@ timeit.exe sleep 2
     <releaseNotes>https://github.com/jftuga/timeit/releases/tag/v1.2.1/</releaseNotes>
     <docsUrl>https://github.com/jftuga/timeit/blob/master/README.md</docsUrl>
     <projectSourceUrl>https://github.com/jftuga/timeit/</projectSourceUrl>
-    <packageSourceUrl>https://github.com/jftuga/timeit/chocolatey/</packageSourceUrl>
+    <packageSourceUrl>https://github.com/jftuga/timeit/tree/master/chocolatey</packageSourceUrl>
     <dependencies>
       <dependency id="chocolatey" version="0.10.15" />
     </dependencies>
