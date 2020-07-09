@@ -1,9 +1,8 @@
 <?xml version="1.0"?>
-<!-- Do not remove this test for UTF-8: if “Ω” doesn’t appear as greek uppercase omega letter enclosed in quotation marks, you should use an editor that supports UTF-8, not this one. -->
-<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>timeit</id>
-    <version>1.2.1.20200517</version>
+    <version>1.2.3</version>
     <title>timeit</title>
     <authors>John Taylor</authors>
     <owners>John Taylor</owners>
@@ -11,24 +10,29 @@
     <projectUrl>https://github.com/jftuga/timeit/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description><![CDATA[
-timeit is a CLI tool used to time the duration of the given cmd
+timeit is a cross-platform CLI tool used to time the duration of the given cmd
 
 Usage: timeit [cmd] [args...]
-You may need to surround args in double-quotes
+You may need to surround args within double-quotes
+
+Examples:
+    timeit wget https://example.com/file.tar.gz
+    timeit gzip -t "file with spaces.gz"
+
+For built-in Windows 'cmd' commands:
+    timeit cmd /c "dir c: /s/b > list.txt"
+    timeit cmd /c dir /s "c:"
 
 Example:
 timeit.exe sleep 2
 2.04042s
 ]]></description>
     <summary>timeit is a CLI tool used to time the duration of the given command</summary>
+    <releaseNotes>https://github.com/jftuga/timeit/releases/tag/v1.2.3/</releaseNotes>
     <tags>timer</tags>
-    <releaseNotes>https://github.com/jftuga/timeit/releases/tag/v1.2.1/</releaseNotes>
-    <docsUrl>https://github.com/jftuga/timeit/blob/master/README.md</docsUrl>
     <projectSourceUrl>https://github.com/jftuga/timeit/</projectSourceUrl>
     <packageSourceUrl>https://github.com/jftuga/timeit/tree/master/chocolatey</packageSourceUrl>
-    <dependencies>
-      <dependency id="chocolatey" version="0.10.15" />
-    </dependencies>
+    <docsUrl>https://github.com/jftuga/timeit/blob/master/README.md</docsUrl>
   </metadata>
   <files>
     <file src="tools\**" target="tools" />
