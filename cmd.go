@@ -16,11 +16,13 @@ import (
 	"os/exec"
 	"os/signal"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 )
 
-const version = "1.2.3"
+const VERSION = "1.3.0"
+const TMPFILE = ".timeit.start.tmp"
 
 var timeStart time.Time
 
@@ -78,10 +80,44 @@ func ctrlCHandler() {
 	}()
 }
 
+func check(err error) {
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", err)
+		os.Exit(1)
+	}
+}
+
+func createStartFile() {
+	f, err := os.Create(TMPFILE)
+	check(err)
+	f.WriteString(fmt.Sprintf("%s", time.Now().Format("2006-01-02 15:04:05.000000 -0700 MST")))
+	f.Close()
+}
+
+func getStartFileTime() string {
+	f, err := os.Open(TMPFILE)
+	check(err)
+	b1 := make([]byte, 100)
+	n1, err := f.Read(b1)
+	check(err)
+	f.Close()
+	//fmt.Printf("%d bytes: %s\n", n1, string(b1[:n1]))
+	return string(b1[:n1])
+}
+
+func getElapsedTime(startTime string) time.Duration {
+	timeT, err := time.Parse("2006-01-02 15:04:05.000000 -0700 MST", strings.Split(startTime, " m=")[0])
+	check(err)
+	elapsedTime := time.Since(timeT)
+	err = os.Remove(TMPFILE)
+	check(err)
+	return elapsedTime
+}
+
 func usage() {
-	fmt.Fprintf(os.Stderr, "\ntimeit v%s\n", version)
+	fmt.Fprintf(os.Stderr, "\ntimeit v%s\n", VERSION)
 	fmt.Fprintf(os.Stderr, "https://github.com/jftuga/timeit\n")
-	fmt.Fprintf(os.Stderr, "A cross-platform CLI tool used to time the duration of the given cmd\n\n")
+	fmt.Fprintf(os.Stderr, "A cross-platform CLI tool used to time the duration of the given command\n\n")
 	fmt.Fprintf(os.Stderr, "Usage: %s [cmd] [args...]\n", filepath.Base(os.Args[0]))
 	fmt.Fprintf(os.Stderr, "You may need to surround args within double-quotes\n\n")
 	fmt.Fprintf(os.Stderr, "Examples:\n")
@@ -89,7 +125,11 @@ func usage() {
 	fmt.Fprintf(os.Stderr, "    timeit gzip -t \"file with spaces.gz\"\n\n")
 	fmt.Fprintf(os.Stderr, "For built-in Windows 'cmd' commands:\n")
 	fmt.Fprintf(os.Stderr, "    timeit cmd /c \"dir c:\\ /s/b > list.txt\"\n")
-	fmt.Fprintf(os.Stderr, "    timeit cmd /c dir /s \"c:\\Program Files\"\n\n")
+	fmt.Fprintf(os.Stderr, "    timeit cmd /c dir /s \"c:\\Program Files\"\n")
+	fmt.Fprintf(os.Stderr, "\n")
+	fmt.Fprintf(os.Stderr, "Run 'timeit _start' to create this file containing the current time: %s\n", TMPFILE)
+	fmt.Fprintf(os.Stderr, "Run 'timeit _end' to read (and then delete) that file.  The elapsed time will then be displayed.\n")
+	fmt.Fprintf(os.Stderr, "\n")
 }
 
 func main() {
@@ -98,10 +138,21 @@ func main() {
 		os.Exit(0)
 	}
 
+	if strings.ToLower(os.Args[1]) == "_start" {
+		createStartFile()
+		return
+	}
+
+	if strings.ToLower(os.Args[1]) == "_end" {
+		elapsedTime := getElapsedTime(getStartFileTime())
+		fmt.Fprintln(os.Stderr, elapsedTime)
+		return
+	}
+
 	cmd := exec.Command(os.Args[1], os.Args[2:len(os.Args)]...)
 	outBuf, errBuf := ioSetup(cmd)
 	ctrlCHandler()
 	run(cmd, outBuf, errBuf)
-	elapsed := time.Since(timeStart)
-	fmt.Fprintln(os.Stderr, elapsed)
+
+	fmt.Fprintln(os.Stderr, time.Since(timeStart))
 }
