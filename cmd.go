@@ -21,7 +21,7 @@ import (
 	"time"
 )
 
-const VERSION = "1.3.0"
+const VERSION = "1.3.1"
 const TMPFILE = ".timeit.start.tmp"
 
 var timeStart time.Time
@@ -127,8 +127,9 @@ func usage() {
 	fmt.Fprintf(os.Stderr, "    timeit cmd /c \"dir c:\\ /s/b > list.txt\"\n")
 	fmt.Fprintf(os.Stderr, "    timeit cmd /c dir /s \"c:\\Program Files\"\n")
 	fmt.Fprintf(os.Stderr, "\n")
-	fmt.Fprintf(os.Stderr, "Run 'timeit _start' to create this file containing the current time: %s\n", TMPFILE)
+	fmt.Fprintf(os.Stderr, "Run 'timeit _start' to create (or overwrite) this file containing the current time: %s\n", TMPFILE)
 	fmt.Fprintf(os.Stderr, "Run 'timeit _end' to read (and then delete) that file.  The elapsed time will then be displayed.\n")
+	fmt.Fprintf(os.Stderr, "This can be useful for timing multiple, long-running commands.\n")
 	fmt.Fprintf(os.Stderr, "\n")
 }
 

@@ -15,8 +15,9 @@ For built-in Windows 'cmd' commands:
     timeit cmd /c "dir c:\ /s/b > list.txt"
     timeit cmd /c dir /s "c:\Program Files"
 
-Run 'timeit _start' to create this file containing the current time: .timeit.start.tmp
+Run 'timeit _start' to create (or overwrite) this file containing the current time: .timeit.start.tmp
 Run 'timeit _end' to read (and then delete) that file.  The elapsed time will then be displayed.
+This can be useful for timing multiple, long-running commands.
 
 ```
 
