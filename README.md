@@ -5,7 +5,7 @@ A cross-platform CLI tool used to time the duration of the given command
 
 * [Binaries](https://github.com/jftuga/timeit/releases) are available for Windows, MacOS and Linux
 * Homebrew installation for MacOS and Linux:
-* * brew tap jftuga/homebrew-tap; brew update; brew install jftuga/tap/timeit`
+* * `brew tap jftuga/homebrew-tap; brew update; brew install jftuga/tap/timeit`
 
 ## Usage
 
