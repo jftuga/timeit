@@ -21,7 +21,8 @@ import (
 	"time"
 )
 
-const VERSION = "1.3.1"
+const VERSION = "1.3.2"
+const URL = "https://github.com/jftuga/timeit"
 const TMPFILE = ".timeit.start.tmp"
 
 var timeStart time.Time
@@ -114,9 +115,13 @@ func getElapsedTime(startTime string) time.Duration {
 	return elapsedTime
 }
 
+func version() {
+	fmt.Fprintf(os.Stderr, "timeit v%s\n", VERSION)
+	fmt.Fprintf(os.Stderr, "%s\n", URL)
+}
+
 func usage() {
-	fmt.Fprintf(os.Stderr, "\ntimeit v%s\n", VERSION)
-	fmt.Fprintf(os.Stderr, "https://github.com/jftuga/timeit\n")
+	fmt.Fprintf(os.Stderr, "\ntimeit v%s\n\n", VERSION)
 	fmt.Fprintf(os.Stderr, "A cross-platform CLI tool used to time the duration of the given command\n\n")
 	fmt.Fprintf(os.Stderr, "Usage: %s [cmd] [args...]\n", filepath.Base(os.Args[0]))
 	fmt.Fprintf(os.Stderr, "You may need to surround args within double-quotes\n\n")
@@ -139,6 +144,10 @@ func main() {
 		os.Exit(0)
 	}
 
+	if len(os.Args) == 2 && os.Args[1] == "-v" {
+		version()
+		os.Exit(0)
+	}
 	if strings.ToLower(os.Args[1]) == "_start" {
 		createStartFile()
 		return

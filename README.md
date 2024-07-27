@@ -1,5 +1,5 @@
 # timeit
-A cross-platform CLI tool used to time the duration of the given command 
+A cross-platform CLI tool used to time the duration of the given command
 
 ## Usage
 
